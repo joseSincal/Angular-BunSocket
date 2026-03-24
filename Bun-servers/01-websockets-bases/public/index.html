@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WebSocket Cliente</title>
+    </head>
+    <body>
+        <h1>Status</h1>
+        <p id="status">Connecting...</p>
+
+        <button id="btn-disconnect">Disconnect</button>
+        <button id="btn-connect">Connect</button>
+
+        <form id="message-form">
+            <h1>Messages</h1>
+            <input
+                type="text"
+                id="input-message"
+                placeholder="Type a message..." />
+            <button id="btn-send">Send</button>
+        </form>
+
+        <ul id="messages"></ul>
+
+        <script>
+            const socket = new WebSocket('ws://localhost:3100');
+
+            const status = document.querySelector('#status');
+            const messageForm = document.querySelector('#message-form');
+            const messageInput = document.querySelector('#input-message');
+            const messageContainer = document.querySelector('#messages');
+
+            const btnDisconnect = document.querySelector('#btn-disconnect');
+            const btnConnect = document.querySelector('#btn-connect');
+
+            console.log({
+                status,
+                messageForm,
+                messageInput,
+                messageContainer,
+                btnDisconnect,
+                btnConnect,
+            });
+        </script>
+    </body>
+</html>
