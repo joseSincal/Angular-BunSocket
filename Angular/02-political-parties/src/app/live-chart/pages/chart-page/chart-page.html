@@ -1,0 +1,13 @@
+<h1>
+  Partidos Políticos - <small>{{ websSocketService.connectionStatus() }}</small>
+</h1>
+
+<!-- CHART -->
+@if (parties().length > 0) {
+  <bar-chart [chartData]="chartData()" />
+} @else {
+  <p>No hay partidos políticos disponibles.</p>
+}
+
+<!-- CRUD para el control de los partidos políticos -->
+<chart-form [parties]="parties()" />

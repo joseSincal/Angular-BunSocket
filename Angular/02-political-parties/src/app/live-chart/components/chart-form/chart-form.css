@@ -1,0 +1,93 @@
+:host {
+  display: block;
+  padding: 24px 0;
+}
+
+.party-config,
+.party-config *,
+.party-config *::before,
+.party-config *::after {
+  box-sizing: border-box;
+}
+
+.party-config {
+  padding: 22px 22px 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(25, 25, 25, 0.62), rgba(22, 22, 22, 0.62));
+  box-shadow:
+    0 16px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.party-config__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.party-config__title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.party-config__add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid rgba(62, 182, 90, 0.6);
+  background: rgba(26, 65, 35, 0.35);
+  color: rgba(114, 255, 155, 0.95);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.party-config__add-button:hover {
+  border-color: rgba(62, 182, 90, 0.85);
+  background: rgba(26, 65, 35, 0.5);
+}
+
+.party-config__add-button:active {
+  transform: translateY(1px);
+}
+
+.party-config__add-button:focus-visible {
+  outline: 3px solid rgba(114, 255, 155, 0.3);
+  outline-offset: 2px;
+}
+
+.party-config__add-button-icon {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid rgba(114, 255, 155, 0.5);
+  line-height: 1;
+}
+
+.party-config__divider {
+  margin: 16px 0 18px;
+  height: 1px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.party-config__list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

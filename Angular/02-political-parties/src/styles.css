@@ -1,0 +1,10 @@
+html,
+body {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  background-color: #303030;
+  color: white;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}

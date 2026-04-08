@@ -1,0 +1,16 @@
+{
+  "snyk.advanced.autoSelectOrganization": true,
+  "angular-schematics.schematicsDefaultOptions": {
+    "angular-*": {
+      "externalTemplate": true,
+      "skipStyle": true
+    },
+    "angular-component": {
+      "skipChangeDetectionOnPush": true
+    },
+    "angular-page": {
+      "skipChangeDetectionOnPush": true
+    }
+  },
+  "snyk.advanced.organization": "720add34-b501-435e-90df-e3a915a6813a"
+}

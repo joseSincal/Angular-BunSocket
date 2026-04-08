@@ -1,0 +1,48 @@
+@let partyData = party();
+<li class="party-row">
+  <input
+    class="party-row__color"
+    [style.background-color]="partyData.color"
+    type="checkbox"
+    [aria-label]="partyData.name"
+  />
+
+  <input
+    class="party-row__name"
+    type="text"
+    (input)="updatePartyName($event.target.value)"
+    [value]="partyData.name"
+    aria-label="Party name"
+  />
+
+  <div class="party-row__controls" aria-label="Party value controls">
+    <button
+      class="party-row__control-button"
+      type="button"
+      aria-label="Decrease value"
+      (click)="decrementVotes.emit(partyData)"
+    >
+      <span aria-hidden="true">−</span>
+    </button>
+
+    <span class="party-row__value" aria-label="Current value">{{ partyData.votes }}</span>
+
+    <button
+      class="party-row__control-button"
+      type="button"
+      aria-label="Increase value"
+      (click)="incrementVotes.emit(partyData)"
+    >
+      <span aria-hidden="true">+</span>
+    </button>
+
+    <button
+      class="party-row__delete-button"
+      type="button"
+      aria-label="Delete party"
+      (click)="delete.emit(partyData)"
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+</li>
