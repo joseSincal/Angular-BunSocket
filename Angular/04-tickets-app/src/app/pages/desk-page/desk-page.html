@@ -1,0 +1,133 @@
+<div class="min-h-screen">
+  <main class="mx-auto max-w-6xl px-6 pb-12 pt-6">
+    <p class="text-sm font-semibold tracking-wide text-slate-300/85">Seleccionar escritorio</p>
+    <h1 class="mt-2 text-4xl font-bold tracking-[-0.02em] md:text-5xl">Escritorio de atención</h1>
+    <p class="mt-2 max-w-3xl leading-relaxed text-slate-300/85">
+      Pantalla del operador: toma el siguiente ticket, atiende y finaliza.
+    </p>
+
+    <section
+      class="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-12"
+      aria-label="Escritorio de atención"
+    >
+      <article
+        class="lg:col-span-5 rounded-3xl border border-slate-200/15 bg-linear-to-b from-slate-900/70 to-black/20 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur"
+        aria-label="Control"
+      >
+        <h2 class="text-lg font-bold tracking-[-0.01em]">Control</h2>
+        <p class="mt-1 text-sm leading-relaxed text-slate-300/85">
+          Componentes típicos del operador.
+        </p>
+
+        <div class="mt-5 rounded-2xl border border-slate-200/10 bg-black/20 p-4">
+          <div class="flex items-center justify-between gap-4">
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-slate-200/90">Escritorio</p>
+              <p class="mt-1 text-2xl font-bold tracking-tight">#{{ deskId() }}</p>
+            </div>
+
+            <a
+              class="inline-flex h-11 items-center justify-center rounded-full border border-slate-200/15 bg-white/5 px-6 text-sm font-semibold text-white/90 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/70 active:translate-y-px"
+              routerLink="/desk-select"
+            >
+              Cambiar
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-2xl border border-slate-200/10 bg-black/20 p-4">
+          <p class="text-sm font-semibold text-slate-200/90">Estado</p>
+          @if (queueCount() === 0) {
+          <p class="mt-1 text-sm text-slate-300/85">No hay tickets en la cola.</p>
+          } @else {
+          <p class="mt-1 text-sm text-slate-300/85">Hay tickets esperando en la cola.</p>
+          }
+          <p class="mt-2 text-xs text-slate-300/70">En cola: {{ queueCount() }}</p>
+        </div>
+
+        <div class="mt-6 h-px w-full bg-slate-200/10"></div>
+
+        <div class="mt-5 flex flex-col gap-4">
+          <button
+            type="button"
+            class="inline-flex w-full min-h-12 items-center justify-center rounded-full border border-slate-200/15 bg-white/5 px-5 py-3 text-center text-sm font-semibold leading-snug text-white/90 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/70 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 whitespace-normal"
+            [disabled]="!canTakeNextTicket()"
+            (click)="takeNextTicket(false)"
+          >
+            Tomar siguiente ticket
+          </button>
+
+          <button
+            type="button"
+            class="inline-flex w-full min-h-12 items-center justify-center rounded-full border border-amber-400/30 bg-amber-500/15 px-5 py-3 text-center text-sm font-semibold leading-snug text-white/90 transition hover:bg-amber-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/70 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 whitespace-normal"
+            [disabled]="!canTakeNextTicket()"
+            (click)="takeNextTicket(true)"
+          >
+            Forzar normal
+          </button>
+
+          <button
+            type="button"
+            class="inline-flex w-full min-h-12 items-center justify-center rounded-full border border-slate-200/15 bg-white/5 px-5 py-3 text-center text-sm font-semibold leading-snug text-white/70 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300/70 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 whitespace-normal"
+            [disabled]="!canFinishAttention()"
+          >
+            Finalizar atención
+          </button>
+        </div>
+      </article>
+
+      <div class="lg:col-span-7 flex flex-col gap-5">
+        <article
+          class="rounded-3xl border border-slate-200/15 bg-linear-to-b from-slate-900/70 to-black/20 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur"
+          aria-label="Ahora atendiendo"
+        >
+          <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.32em] text-slate-200/70">
+                Ahora atendiendo
+              </p>
+              <p class="mt-4 text-5xl font-bold tracking-tight sm:text-6xl">
+                {{ currentTicketId() ?? '—' }}
+              </p>
+            </div>
+
+            <div
+              class="w-full max-w-[240px] rounded-2xl border border-slate-200/10 bg-black/20 p-4 text-center"
+              aria-label="Escritorio actual"
+            >
+              <p class="text-sm font-semibold text-slate-200/90">Escritorio</p>
+              <p class="mt-3 text-4xl font-bold tracking-tight">#{{ deskId() }}</p>
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="rounded-3xl border border-slate-200/15 bg-linear-to-b from-slate-900/60 to-black/20 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur"
+          aria-label="Últimos atendidos"
+        >
+          <h2 class="text-lg font-bold tracking-[-0.01em]">Últimos atendidos en este escritorio</h2>
+          <p class="mt-1 text-sm text-slate-300/85">Máximo 8 para lectura rápida.</p>
+
+          @if (recentTickets().length === 0) {
+          <div class="mt-4 rounded-2xl border border-slate-200/10 bg-black/20 p-4">
+            <p class="text-sm text-slate-300/85">No hay tickets recientes para este escritorio.</p>
+          </div>
+          } @else {
+          <ol class="mt-4 space-y-2" aria-label="Listado de tickets atendidos recientemente">
+            @for (ticket of recentTickets(); track ticket.id) {
+            <li class="rounded-2xl border border-slate-200/10 bg-black/20 px-4 py-3">
+              <div class="flex items-center justify-between gap-4">
+                <p class="text-sm font-semibold text-white/90">{{ ticket.id }}</p>
+                <p class="text-xs text-slate-300/70">
+                  @if (ticket.prefix === 'P') { Prioritario } @else { Normal }
+                </p>
+              </div>
+            </li>
+            }
+          </ol>
+          }
+        </article>
+      </div>
+    </section>
+  </main>
+</div>

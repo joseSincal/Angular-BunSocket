@@ -1,0 +1,156 @@
+<main class="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+  <!-- Background decoration -->
+  <div class="pointer-events-none absolute inset-0">
+    <div
+      class="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-emerald-500/15 blur-3xl"
+    ></div>
+    <div
+      class="absolute -bottom-44 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-amber-500/10 blur-3xl"
+    ></div>
+    <div class="absolute inset-0 bg-linear-to-b from-slate-950 via-slate-950 to-slate-900"></div>
+  </div>
+
+  <div class="relative mx-auto flex min-h-screen w-full max-w-6xl items-center px-6 py-14">
+    <div class="w-full">
+      <header class="text-center">
+        <p class="text-xs font-medium uppercase tracking-[0.32em] text-white/60">Dispensador</p>
+        <h1 class="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+          Presiona para obtener tu turno
+        </h1>
+      </header>
+
+      <section class="mx-auto mt-12 grid w-full max-w-5xl gap-6 md:grid-cols-2 md:gap-8">
+        <!-- General -->
+        <button
+          type="button"
+          class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-emerald-950/55 px-8 py-10 text-center shadow-[0_30px_120px_-60px_rgba(16,185,129,0.55)] backdrop-blur-xl transition hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-emerald-300/40"
+          (click)="getTicketNumber('A')"
+          aria-haspopup="dialog"
+        >
+          <div class="pointer-events-none absolute inset-0">
+            <div
+              class="absolute -left-16 -top-24 h-72 w-72 rounded-full bg-emerald-400/25 blur-3xl transition duration-300 group-hover:bg-emerald-400/35"
+            ></div>
+            <div
+              class="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent"
+            ></div>
+          </div>
+
+          <div class="relative flex flex-col items-center">
+            <div
+              class="inline-flex items-center justify-center rounded-full bg-white/10 px-5 py-3 ring-1 ring-white/15"
+            >
+              <span class="sr-only">Ícono de gestión general</span>
+              <person-icon class="h-7 w-7" />
+            </div>
+
+            <p class="mt-6 text-sm font-medium text-white/70">Gestión general</p>
+            <p class="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">Ticket general</p>
+            <p class="mt-4 text-sm text-white/55">(Se agrega a la cola general)</p>
+          </div>
+        </button>
+
+        <!-- Preferential -->
+        <button
+          type="button"
+          class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-amber-950/50 px-8 py-10 text-center shadow-[0_30px_120px_-60px_rgba(245,158,11,0.5)] backdrop-blur-xl transition hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-amber-300/40"
+          (click)="getTicketNumber('P')"
+          aria-haspopup="dialog"
+        >
+          <div class="pointer-events-none absolute inset-0">
+            <div
+              class="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-amber-400/20 blur-3xl transition duration-300 group-hover:bg-amber-400/30"
+            ></div>
+            <div
+              class="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent"
+            ></div>
+          </div>
+
+          <div class="relative flex flex-col items-center">
+            <div
+              class="inline-flex items-center justify-center gap-4 rounded-full bg-white/10 px-5 py-3 ring-1 ring-white/15"
+            >
+              <span class="sr-only">Íconos de gestión preferencial</span>
+              <!-- PregnantIcon -->
+              <pregnant-icon class="h-7 w-7" />
+
+              <!-- WheelChairIcon -->
+              <wheel-chair-icon class="h-7 w-7" />
+
+              <!-- ElderlyCoupleIcon -->
+              <elderly-couple-icon class="h-7 w-7" />
+            </div>
+
+            <p class="mt-6 text-sm font-medium text-white/70">Gestión preferencial</p>
+            <p class="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">Solicitar ticket</p>
+            <p class="mt-4 text-sm text-white/55">(Embarazadas, tercera edad y discapacidad)</p>
+          </div>
+        </button>
+      </section>
+    </div>
+  </div>
+</main>
+
+@if (isTicketModalOpen()) {
+<div class="fixed inset-0 z-50 flex items-center justify-center px-6 py-10">
+  <div
+    class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+    (click)="closeTicketModal()"
+    aria-hidden="true"
+  ></div>
+
+  <section
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="ticket-modal-title"
+    class="relative w-full max-w-md rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-black/60 backdrop-blur-xl"
+  >
+    <header class="flex items-start justify-between gap-6">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-[0.32em] text-white/60">Tu ticket</p>
+        <h2 id="ticket-modal-title" class="mt-3 text-2xl font-semibold tracking-tight">
+          Número asignado
+        </h2>
+      </div>
+
+      <button
+        type="button"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/70 ring-1 ring-white/15 transition hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/30"
+        (click)="closeTicketModal()"
+        aria-label="Cerrar"
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          class="h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M18 6 6 18" />
+          <path d="M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="mt-8 rounded-2xl bg-black/20 p-6 text-center ring-1 ring-white/10">
+      <p class="text-sm font-medium text-white/60">Ticket</p>
+      <p class="mt-3 text-6xl font-bold tracking-normal text-white sm:text-7xl">
+        {{ ticketNumber() }}
+      </p>
+    </div>
+
+    <div class="mt-8 flex justify-end">
+      <button
+        type="button"
+        class="rounded-xl bg-white/10 px-5 py-3 text-sm font-medium text-white ring-1 ring-white/10 transition hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/30"
+        (click)="closeTicketModal()"
+      >
+        Cerrar
+      </button>
+    </div>
+  </section>
+</div>
+}

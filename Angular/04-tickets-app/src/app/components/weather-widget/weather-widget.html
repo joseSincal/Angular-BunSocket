@@ -1,0 +1,23 @@
+<div class="text-right">
+  <!-- Ubicación -->
+  @if (locationText(); as locationText) {
+  <div class="text-xs font-semibold tracking-wide text-white/60">
+    {{ locationText }}
+  </div>
+  }
+
+  <!-- Estado -->
+  @if (isLoading()) {
+  <div class="mt-1 text-lg font-semibold text-white/80">Clima…</div>
+  }
+
+  <!-- Clima -->
+  @if (weather()) {
+  <div class="mt-1 text-3xl font-extrabold tracking-tight tabular-nums sm:text-4xl">
+    {{ temperatureText() }}
+  </div>
+  <div class="mt-1 text-sm font-semibold text-white/70">
+    {{ weatherLabel() }}
+  </div>
+  }
+</div>
