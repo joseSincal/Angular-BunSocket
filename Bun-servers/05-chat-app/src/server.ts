@@ -5,6 +5,10 @@ import { generateUuid } from './utils/generate-uuid';
 import type { WebSocketData } from './types';
 import { handleMessage } from './handlers/message.handler';
 import { handleApiRequest } from './handlers-rest';
+import { validateJwToken } from './utils/jwt-validation';
+import type { Sender } from './types/chat-message.types';
+import { userService } from './services/user.service';
+import { handleGetGroupMessages } from './handlers/group-message.handlers';
 
 export const createServer = () => {
     const server = Bun.serve<WebSocketData>({
@@ -20,10 +24,28 @@ export const createServer = () => {
                 return response;
             }
 
+            //! Identificar nuestros clientes/usuarios
+            const cookies = new Bun.CookieMap(req.headers.get('Cookie') || '');
+            const jwt = cookies.get('X-Token');
+
+            if (!jwt) {
+                return new Response('Unauthorized', { status: 401 });
+            }
+
+            const { userId } = await validateJwToken(jwt);
+            if (!userId) {
+                return new Response('Unauthorized', { status: 401 });
+            }
+
+            const user = await userService.getSenderById(userId);
+            if (!user) {
+                return new Response('Unauthorized', { status: 401 });
+            }
+
             //* Identificar nuestros clientes
             const clientId = generateUuid();
             const upgraded = server.upgrade(req, {
-                data: { clientId },
+                data: { clientId, email: user.email, name: user.name, userId },
             });
 
             if (upgraded) {
@@ -33,43 +55,41 @@ export const createServer = () => {
             return new Response('Upgrade failed', { status: 500 });
         },
         websocket: {
-            open(ws) {
+            async open(ws) {
                 //! Una nueva conexión
-                // console.log(`Cliente: ${ws.data.clientId}`);
                 //! Suscribir el cliente a un canal por defecto
-                // ws.subscribe(SERVER_CONFIG.defaultChannelName);
-                // ! (opcional) Aquí se puede emitir el primer mensaje al cliente
-                // Emitir el primer mensaje al cliente que se acaba de conectar
-                // ws.send({ type: 'my_type', payload: { message: 'Some Payload' } });
-                //! Emitir el mensaje a todos los clientes conectados (-1 cliente que se acaba de conectar)
-                // ws.publish(SERVER_CONFIG.defaultChannelName, JSON.stringify(handleGetParties()));
+                ws.subscribe(SERVER_CONFIG.defaultChannelName);
+                ws.subscribe(ws.data.userId);
+
+                //! Cuando nos conectamos
+                const groupMessages = await handleGetGroupMessages();
+                ws.send(JSON.stringify(groupMessages));
+
+                // TODO: notificar que este usuario se conecto al chat
             },
-            message(ws, message: string) {
+            async message(ws, message: string) {
                 //* Todos los mensajes que llegan al servidor de la misma forma
                 // Se envía a un Handler General
-                const response = handleMessage(message);
-                const responseString = JSON.stringify(response);
+                const response = await handleMessage(message, ws.data);
 
-                //! Envía el mensaje al cliente que lo envió
-                if (response.type === 'ERROR') {
-                    ws.send(responseString);
-                    return;
+                for (const message of response.personal) {
+                    ws.send(JSON.stringify(message));
                 }
 
-                //! Si el mensaje es exclusivo del cliente que lo envió (No llamar el publish)
-                if (response.type === 'PERSONAL_RESPONSE_MESSAGE') {
-                    ws.send(responseString);
-                    return;
+                for (const message of response.broadcast) {
+                    ws.publish(
+                        SERVER_CONFIG.defaultChannelName,
+                        JSON.stringify(message),
+                    );
                 }
-
-                //! Si hay que enviar a todos los clientes conectados (publish + send)
-                // ws.send(responseString);
-                // ws.publish(SERVER_CONFIG.defaultChannelName, responseString);
             },
             close(ws, code, message) {
                 //! Una vez que el cliente se desconecta, "de-suscribir" del canal por defecto
-                // console.log(`Cliente desconectado: ${ws.data.clientId}`);
+
                 ws.unsubscribe(SERVER_CONFIG.defaultChannelName);
+                ws.unsubscribe(ws.data.userId);
+
+                // TODO: Notificar que un usuario salio del chat
             }, // a socket is closed
         }, // handlers
     });
